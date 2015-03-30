@@ -16,8 +16,8 @@ class OrderCrossover implements CrossoverMethodInterface
     {
         $valueCount = count($parentA);
         $child      = $parentA;
-        $sliceStart = rand(0, $valueCount - 1);
-        $sliceEnd   = rand($sliceStart, $valueCount - 1);
+        $sliceStart = mt_rand(0, $valueCount - 1);
+        $sliceEnd   = mt_rand($sliceStart, $valueCount - 1);
 
         for ($i = 0; $i < $valueCount; $i++) {
             $j = ($i + $sliceStart) % $valueCount;

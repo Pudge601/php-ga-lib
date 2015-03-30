@@ -233,7 +233,7 @@ class GeneticAlgorithm implements LoggerAwareInterface
             /* @var Chromosome[] $breedPartners */
             $breedPartners = [];
             for ($j = 0; $j < 2; $j++) {
-                $weightedValue = rand(1, $maxWeightedValue);
+                $weightedValue = mt_rand(1, $maxWeightedValue);
                 $logValue = floor(log($weightedValue, 2));
                 $index = ($populationCount - $logValue) - 1;
                 $breedPartners[] = $this->population[$index];
@@ -261,7 +261,7 @@ class GeneticAlgorithm implements LoggerAwareInterface
 
         $maxWeightedValue = 1 << ($populationCount - 1);
         for ($i = 0; $i < $mutateCount; $i++) {
-            $weightedValue = rand(1, $maxWeightedValue);
+            $weightedValue = mt_rand(1, $maxWeightedValue);
             $logValue = floor(log($weightedValue, 2));
             $index = ($populationCount - $logValue) - 1;
             $mutateChromosome = $this->population[$index];

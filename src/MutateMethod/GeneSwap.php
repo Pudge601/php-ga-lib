@@ -16,10 +16,10 @@ class GeneSwap implements MutateMethodInterface
         $newValue   = $value;
         $valueCount = count($newValue);
         $maxIndex   = $valueCount - 1;
-        $swaps = rand(0, floor($entropy * $valueCount * 0.5));
+        $swaps = mt_rand(0, floor($entropy * $valueCount * 0.5));
         for ($i = 0; $i < $swaps; $i++) {
-            $indexFrom = rand(0, $maxIndex);
-            $indexTo   = rand(0, $maxIndex);
+            $indexFrom = mt_rand(0, $maxIndex);
+            $indexTo   = mt_rand(0, $maxIndex);
             $tmp = $newValue[$indexFrom];
             $newValue[$indexFrom] = $newValue[$indexTo];
             $newValue[$indexTo]   = $tmp;

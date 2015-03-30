@@ -17,7 +17,7 @@ class EdgeRecombination implements CrossoverMethodInterface
         $edges = $this->unionEdges($this->findEdges($parentA), $this->findEdges($parentB));
 
         $parentLength = count($parentA);
-        $mainParent = rand(0, 1) ? $parentA : $parentB;
+        $mainParent = mt_rand(0, 1) ? $parentA : $parentB;
         $node = array_shift($mainParent);
         $child = [];
         while (count($child) < $parentLength) {
@@ -98,7 +98,7 @@ class EdgeRecombination implements CrossoverMethodInterface
             $neighbourCount = count($adjacencyMatrix[$node]);
             if ($chosenNeighbourCount === null ||
                 $neighbourCount < $chosenNeighbourCount ||
-                ($neighbourCount === $chosenNeighbourCount && rand(0, 1))
+                ($neighbourCount === $chosenNeighbourCount && mt_rand(0, 1))
             ) {
                 $chosenNode = $node;
                 $chosenNeighbourCount = $neighbourCount;

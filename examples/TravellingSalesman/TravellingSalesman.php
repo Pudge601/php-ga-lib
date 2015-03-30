@@ -27,8 +27,8 @@ class TravellingSalesman implements FitnessCalculatorInterface
     {
         $cities = [];
         for ($i = 0; $i < $numberOfCities; $i++) {
-            $x = rand(0, $worldSize);
-            $y = rand(0, $worldSize);
+            $x = mt_rand(0, $worldSize);
+            $y = mt_rand(0, $worldSize);
             $cities[] = new Vector($x, $y);
         }
         return $cities;
