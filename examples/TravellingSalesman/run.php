@@ -11,9 +11,9 @@ $travellingSalesman = (new \PW\GA\Example\TravellingSalesman\TravellingSalesman(
 $cities = $travellingSalesman->getCities();
 
 $solution = $travellingSalesman->findSolution([
-    'maxIterations'   => 1000,
-    'populationCount' => 200,
-    'logFrequency'    => 100,
+    \PW\GA\Config::MAX_ITERATIONS   => 10000,
+    \PW\GA\Config::POPULATION_COUNT => 100,
+    \PW\GA\Config::LOG_FREQUENCY    => 1000,
 ]);
 
 $totalDistance = $travellingSalesman->calculateTotalDistance($solution);
