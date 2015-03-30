@@ -36,6 +36,11 @@ class GeneticAlgorithm implements LoggerAwareInterface
     protected $mutateMethod;
 
     /**
+     * @var WeightedSelectorInterface
+     */
+    protected $weightedSelector;
+
+    /**
      * @var LoggerInterface
      */
     protected $logger;
@@ -69,6 +74,8 @@ class GeneticAlgorithm implements LoggerAwareInterface
         $this->crossoverMethod     = $crossoverMethod;
         $this->mutateMethod        = $mutateMethod;
         $this->config              = $config ?: new Config();
+
+        $this->weightedSelector    = new WeightedSelector();
     }
 
     /**
@@ -116,6 +123,16 @@ class GeneticAlgorithm implements LoggerAwareInterface
     public function setMutateMethod(MutateMethodInterface $mutateMethod)
     {
         $this->mutateMethod = $mutateMethod;
+        return $this;
+    }
+
+    /**
+     * @param WeightedSelectorInterface $weightedSelector
+     * @return $this
+     */
+    public function setWeightedSelector(WeightedSelectorInterface $weightedSelector)
+    {
+        $this->weightedSelector = $weightedSelector;
         return $this;
     }
 
@@ -223,22 +240,17 @@ class GeneticAlgorithm implements LoggerAwareInterface
     protected function crossover()
     {
         $maxPopulation   = $this->config->get(Config::POPULATION_COUNT);
-        $weightingCoef   = $this->config->get(Config::WEIGHTING_COEF);
         $populationCount = count($this->population);
         $entropy    = $this->config->get(Config::ENTROPY);
         $breedCount = floor($entropy * ($populationCount * 0.7));
         $breedCount = min($breedCount, floor(($maxPopulation - $populationCount) / 2));
 
-        $maxWeightedValue = pow(1 + $weightingCoef, $populationCount);
-        $randMax = mt_getrandmax();
+        $this->weightedSelector->init($this->population, $this->config->get(Config::WEIGHTING_COEF));
         for ($i = 0; $i < $breedCount; $i++) {
             /* @var Chromosome[] $breedPartners */
             $breedPartners = [];
             for ($j = 0; $j < 2; $j++) {
-                $weightedValue = (mt_rand() / $randMax) * $maxWeightedValue;
-                $logValue = floor(log($weightedValue, 1 + $weightingCoef));
-                $index = ($populationCount - $logValue) - 1;
-                $breedPartners[] = $this->population[$index];
+                $breedPartners[] = $this->weightedSelector->getChromosome();
             }
 
             $newValue = $this->crossoverMethod->crossover(
@@ -256,19 +268,14 @@ class GeneticAlgorithm implements LoggerAwareInterface
     protected function mutate()
     {
         $maxPopulation   = $this->config->get(Config::POPULATION_COUNT);
-        $weightingCoef   = $this->config->get(Config::WEIGHTING_COEF);
         $populationCount = count($this->population);
         $entropy = $this->config->get(Config::ENTROPY);
         $mutateCount = floor($entropy * ($populationCount * 0.7));
         $mutateCount = min($mutateCount, $maxPopulation - $populationCount);
 
-        $maxWeightedValue = pow(1 + $weightingCoef, $populationCount);
-        $randMax = mt_getrandmax();
+        $this->weightedSelector->init($this->population, $this->config->get(Config::WEIGHTING_COEF));
         for ($i = 0; $i < $mutateCount; $i++) {
-            $weightedValue = (mt_rand() / $randMax) * $maxWeightedValue;
-            $logValue = floor(log($weightedValue, 1 + $weightingCoef));
-            $index = ($populationCount - $logValue) - 1;
-            $mutateChromosome = $this->population[$index];
+            $mutateChromosome = $this->weightedSelector->getChromosome();
 
             $newValue = $this->mutateMethod->mutate($mutateChromosome->getValue(), $entropy);
             $this->addChromosome(new Chromosome($newValue));
