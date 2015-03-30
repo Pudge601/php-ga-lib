@@ -223,18 +223,20 @@ class GeneticAlgorithm implements LoggerAwareInterface
     protected function crossover()
     {
         $maxPopulation   = $this->config->get(Config::POPULATION_COUNT);
+        $weightingCoef   = $this->config->get(Config::WEIGHTING_COEF);
         $populationCount = count($this->population);
         $entropy    = $this->config->get(Config::ENTROPY);
         $breedCount = floor($entropy * ($populationCount * 0.7));
         $breedCount = min($breedCount, floor(($maxPopulation - $populationCount) / 2));
 
-        $maxWeightedValue = 1 << ($populationCount - 1);
+        $maxWeightedValue = pow(1 + $weightingCoef, $populationCount);
+        $randMax = mt_getrandmax();
         for ($i = 0; $i < $breedCount; $i++) {
             /* @var Chromosome[] $breedPartners */
             $breedPartners = [];
             for ($j = 0; $j < 2; $j++) {
-                $weightedValue = mt_rand(1, $maxWeightedValue);
-                $logValue = floor(log($weightedValue, 2));
+                $weightedValue = (mt_rand() / $randMax) * $maxWeightedValue;
+                $logValue = floor(log($weightedValue, 1 + $weightingCoef));
                 $index = ($populationCount - $logValue) - 1;
                 $breedPartners[] = $this->population[$index];
             }
@@ -254,15 +256,17 @@ class GeneticAlgorithm implements LoggerAwareInterface
     protected function mutate()
     {
         $maxPopulation   = $this->config->get(Config::POPULATION_COUNT);
+        $weightingCoef   = $this->config->get(Config::WEIGHTING_COEF);
         $populationCount = count($this->population);
         $entropy = $this->config->get(Config::ENTROPY);
         $mutateCount = floor($entropy * ($populationCount * 0.7));
         $mutateCount = min($mutateCount, $maxPopulation - $populationCount);
 
-        $maxWeightedValue = 1 << ($populationCount - 1);
+        $maxWeightedValue = pow(1 + $weightingCoef, $populationCount);
+        $randMax = mt_getrandmax();
         for ($i = 0; $i < $mutateCount; $i++) {
-            $weightedValue = mt_rand(1, $maxWeightedValue);
-            $logValue = floor(log($weightedValue, 2));
+            $weightedValue = (mt_rand() / $randMax) * $maxWeightedValue;
+            $logValue = floor(log($weightedValue, 1 + $weightingCoef));
             $index = ($populationCount - $logValue) - 1;
             $mutateChromosome = $this->population[$index];
 

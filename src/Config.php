@@ -10,6 +10,7 @@ class Config
     const LOG_FREQUENCY    = 'logFrequency';
     const SORT_DIR         = 'sortDir';
     const MAX_ITERATIONS   = 'maxIterations';
+    const WEIGHTING_COEF   = 'weightingCoef';
 
     /**
      * @var array
@@ -19,7 +20,8 @@ class Config
         self::POPULATION_COUNT => 50,
         self::LOG_FREQUENCY    => 10,
         self::SORT_DIR         => GeneticAlgorithm::SORT_DIR_DESC,
-        self::MAX_ITERATIONS   => 5000
+        self::MAX_ITERATIONS   => 5000,
+        self::WEIGHTING_COEF   => 0.5
     ];
 
     /**
@@ -110,6 +112,18 @@ class Config
             );
         }
         return $sortDir;
+    }
+
+    /**
+     * @param int $weightingCoef
+     * @return int
+     */
+    public function filterWeightingCoef($weightingCoef)
+    {
+        if ($weightingCoef < 0 || $weightingCoef > 1) {
+            throw new InvalidArgumentException('Weighting Coefficient must be a float between 0 and 1');
+        }
+        return $weightingCoef;
     }
 
 }
