@@ -151,6 +151,11 @@ class GeneticAlgorithm implements LoggerAwareInterface
         $chromosomes     = $this->chromosomeGenerator->generateChromosomes($populationCount);
 
         foreach ($chromosomes as $chromosome) {
+            foreach ($chromosome->getValue() as $gene) {
+                if (!is_scalar($gene)) {
+                    throw new UnexpectedValueException('All chromosome\'s genes must be scalar type');
+                }
+            }
             $this->addChromosome($chromosome);
         }
 

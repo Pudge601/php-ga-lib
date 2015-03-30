@@ -8,17 +8,20 @@ $cityCoords = [[469,473], [570,490], [475,560], [452,467], [447,433], [475,204],
 $travellingSalesman = (new \PW\GA\Example\TravellingSalesman\TravellingSalesman())
     ->setCities($cityCoords);
 
+$cities = $travellingSalesman->getCities();
+
 $solution = $travellingSalesman->findSolution([
-    'maxIterations'   => 10000,
+    'maxIterations'   => 1000,
     'populationCount' => 200,
-    'logFrequency'    => 1000,
+    'logFrequency'    => 100,
 ]);
 
 $totalDistance = $travellingSalesman->calculateTotalDistance($solution);
 
 $citiesOrdered = [];
 /* @var \PW\GA\Example\TravellingSalesman\Vector $city */
-foreach ($solution as $city) {
+foreach ($solution as $cityIndex) {
+    $city = $cities[$cityIndex];
     $citiesOrdered[] = "[{$city->x},{$city->y}]";
 }
 

@@ -82,7 +82,7 @@ class TravellingSalesman implements FitnessCalculatorInterface
     }
 
     /**
-     * @param mixed[] $value
+     * @param int[] $value
      * @return float|int
      */
     public function calculateFitness(array $value)
@@ -91,7 +91,7 @@ class TravellingSalesman implements FitnessCalculatorInterface
     }
 
     /**
-     * @param Vector[] $value
+     * @param int[] $value
      * @return float|int
      */
     public function calculateTotalDistance(array $value)
@@ -99,7 +99,8 @@ class TravellingSalesman implements FitnessCalculatorInterface
         $distance = 0;
         /* @var Vector $lastCity, $city */
         $lastCity = null;
-        foreach ($value as $city) {
+        foreach ($value as $cityIndex) {
+            $city = $this->cities[$cityIndex];
             if ($lastCity !== null) {
                 $distance += $lastCity->distanceTo($city);
             }
@@ -109,7 +110,7 @@ class TravellingSalesman implements FitnessCalculatorInterface
     }
 
     /**
-     * @param Vector[] $value
+     * @param int[] $value
      * @return float|int
      */
     public function calculateSquaredDistanceSum(array $value)
@@ -117,7 +118,8 @@ class TravellingSalesman implements FitnessCalculatorInterface
         $distance = 0;
         /* @var Vector $lastCity, $city */
         $lastCity = null;
-        foreach ($value as $city) {
+        foreach ($value as $cityIndex) {
+            $city = $this->cities[$cityIndex];
             if ($lastCity !== null) {
                 $distance += $lastCity->distanceToSquared($city);
             }
@@ -134,7 +136,7 @@ class TravellingSalesman implements FitnessCalculatorInterface
     {
         $ga = new GeneticAlgorithm(
             $this,
-            new ChromosomeGenerator\OrderedList($this->cities),
+            new ChromosomeGenerator\OrderedList(range(0, count($this->cities) - 1)),
             new CrossoverMethod\OrderedList\OrderCrossover(),
             new MutateMethod\GeneSwap(),
             new Config($options)
