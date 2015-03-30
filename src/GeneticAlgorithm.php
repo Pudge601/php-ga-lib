@@ -187,18 +187,20 @@ class GeneticAlgorithm implements LoggerAwareInterface
      */
     protected function runIteration()
     {
-        $noCulled  = $this->cull();
+        list($cullCount, $crossoverCount, $mutateCount) = $this->calculateChurn();
 
-        $noBred    = $this->crossover();
+        $this->cull($cullCount);
 
-        $noMutated = $this->mutate();
+        $this->crossover($crossoverCount);
+
+        $this->mutate($mutateCount);
 
         $this->sortPopulation();
 
         return [
-            'culled'  => $noCulled,
-            'bred'    => $noBred,
-            'mutated' => $noMutated,
+            'culls'      => $cullCount,
+            'crossovers' => $crossoverCount,
+            'mutations'  => $mutateCount,
         ];
     }
 
@@ -223,30 +225,25 @@ class GeneticAlgorithm implements LoggerAwareInterface
 
     /**
      * Cull the weaker chromosomes from the population
+     *
+     * @param int $cullCount
      */
-    protected function cull()
+    protected function cull($cullCount)
     {
-        $entropy   = $this->config->get(Config::ENTROPY);
-        $cullCount = floor($entropy * (count($this->population) * 0.5));
         for ($i = 0; $i < $cullCount; $i++) {
             array_pop($this->population);
         }
-        return $cullCount;
     }
 
     /**
      * Crossover the stronger chromosomes to increase the population
+     *
+     * @param int $crossoverCount
      */
-    protected function crossover()
+    protected function crossover($crossoverCount)
     {
-        $maxPopulation   = $this->config->get(Config::POPULATION_COUNT);
-        $populationCount = count($this->population);
-        $entropy    = $this->config->get(Config::ENTROPY);
-        $breedCount = floor($entropy * ($populationCount * 0.7));
-        $breedCount = min($breedCount, floor(($maxPopulation - $populationCount) / 2));
-
         $this->weightedSelector->init($this->population, $this->config->get(Config::WEIGHTING_COEF));
-        for ($i = 0; $i < $breedCount; $i++) {
+        for ($i = 0; $i < $crossoverCount; $i++) {
             /* @var Chromosome[] $breedPartners */
             $breedPartners = [];
             for ($j = 0; $j < 2; $j++) {
@@ -259,20 +256,16 @@ class GeneticAlgorithm implements LoggerAwareInterface
             );
             $this->addChromosome(new Chromosome($newValue));
         }
-        return $breedCount;
     }
 
     /**
      * Get mutations of the stronger chromosomes
+     *
+     * @param int $mutateCount
      */
-    protected function mutate()
+    protected function mutate($mutateCount)
     {
-        $maxPopulation   = $this->config->get(Config::POPULATION_COUNT);
-        $populationCount = count($this->population);
         $entropy = $this->config->get(Config::ENTROPY);
-        $mutateCount = floor($entropy * ($populationCount * 0.7));
-        $mutateCount = min($mutateCount, $maxPopulation - $populationCount);
-
         $this->weightedSelector->init($this->population, $this->config->get(Config::WEIGHTING_COEF));
         for ($i = 0; $i < $mutateCount; $i++) {
             $mutateChromosome = $this->weightedSelector->getChromosome();
@@ -280,7 +273,6 @@ class GeneticAlgorithm implements LoggerAwareInterface
             $newValue = $this->mutateMethod->mutate($mutateChromosome->getValue(), $entropy);
             $this->addChromosome(new Chromosome($newValue));
         }
-        return $mutateCount;
     }
 
     /**
@@ -291,6 +283,27 @@ class GeneticAlgorithm implements LoggerAwareInterface
     {
         $this->population[] = $chromosome;
         return $this;
+    }
+
+    /**
+     * Calculates how many chromosomes to cull, how many should be created through
+     * crossover, and how many should be created by mutation
+     *
+     * @return array
+     */
+    protected function calculateChurn()
+    {
+        $entropy         = $this->config->get(Config::ENTROPY);
+        $populationCount = count($this->population);
+
+        $cullCount = floor($entropy * ($populationCount * 0.5));
+        $remaining = $populationCount - $cullCount;
+        $available = $this->config->get(Config::POPULATION_COUNT) - $remaining;
+
+        $crossoverCount = floor($available / 2);
+        $mutateCount    = $available - $crossoverCount;
+
+        return [$cullCount, $crossoverCount, $mutateCount];
     }
 
     /**
@@ -313,9 +326,9 @@ class GeneticAlgorithm implements LoggerAwareInterface
         $this->log(
             "Iteration #$iterationNumber: " .
             "Population: $populationCount, " .
-            "Culled: {$stats['culled']}, " .
-            "Bred: {$stats['bred']}, " .
-            "Mutated: {$stats['mutated']}, " .
+            "Culls: {$stats['culls']}, " .
+            "Crossovers: {$stats['crossovers']}, " .
+            "Mutations: {$stats['mutations']}, " .
             "Best fitness: $bestFitness, " .
             "Average fitness: $averageFitness"
         );
