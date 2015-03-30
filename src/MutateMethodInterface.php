@@ -1,6 +1,6 @@
 <?php
 
-namespace PW\GA\MutateMethod;
+namespace PW\GA;
 
 
 interface MutateMethodInterface

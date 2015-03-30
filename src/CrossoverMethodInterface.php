@@ -1,6 +1,6 @@
 <?php
 
-namespace PW\GA\CrossoverMethod;
+namespace PW\GA;
 
 interface CrossoverMethodInterface
 {

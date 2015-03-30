@@ -1,8 +1,6 @@
 <?php
 
-namespace PW\GA\ChromosomeGenerator;
-
-use PW\GA\Chromosome;
+namespace PW\GA;
 
 interface ChromosomeGeneratorInterface
 {

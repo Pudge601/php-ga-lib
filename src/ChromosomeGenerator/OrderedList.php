@@ -3,6 +3,7 @@
 namespace PW\GA\ChromosomeGenerator;
 
 use PW\GA\Chromosome;
+use PW\GA\ChromosomeGeneratorInterface;
 
 class OrderedList implements ChromosomeGeneratorInterface
 {

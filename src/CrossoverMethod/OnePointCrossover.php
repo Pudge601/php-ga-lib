@@ -2,6 +2,8 @@
 
 namespace PW\GA\CrossoverMethod;
 
+use PW\GA\CrossoverMethodInterface;
+
 class OnePointCrossover implements CrossoverMethodInterface
 {
 

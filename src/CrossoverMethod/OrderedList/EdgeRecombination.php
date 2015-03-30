@@ -2,7 +2,7 @@
 
 namespace PW\GA\CrossoverMethod\OrderedList;
 
-use PW\GA\CrossoverMethod\CrossoverMethodInterface;
+use PW\GA\CrossoverMethodInterface;
 
 class EdgeRecombination implements CrossoverMethodInterface
 {

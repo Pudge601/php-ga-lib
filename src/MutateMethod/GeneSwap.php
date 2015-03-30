@@ -3,6 +3,8 @@
 namespace PW\GA\MutateMethod;
 
 
+use PW\GA\MutateMethodInterface;
+
 class GeneSwap implements MutateMethodInterface
 {
 

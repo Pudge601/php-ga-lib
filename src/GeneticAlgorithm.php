@@ -4,9 +4,6 @@ namespace PW\GA;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
-use PW\GA\ChromosomeGenerator\ChromosomeGeneratorInterface;
-use PW\GA\CrossoverMethod\CrossoverMethodInterface;
-use PW\GA\MutateMethod\MutateMethodInterface;
 
 class GeneticAlgorithm implements LoggerAwareInterface
 {
