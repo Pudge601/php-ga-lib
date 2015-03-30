@@ -137,6 +137,7 @@ class TravellingSalesman implements FitnessCalculatorInterface
         $ga = new GeneticAlgorithm(
             $this,
             new ChromosomeGenerator\OrderedList(range(0, count($this->cities) - 1)),
+//            new CrossoverMethod\OrderedList\EdgeRecombination(),
             new CrossoverMethod\OrderedList\OrderCrossover(),
             new MutateMethod\GeneSwap(),
             new Config($options)
