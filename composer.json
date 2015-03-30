@@ -6,10 +6,18 @@
         "php": ">=5.4.7",
         "psr/log": "~1.0"
     },
+    "require-dev": {
+        "phpunit/phpunit": "~4.5"
+    },
     "autoload": {
         "psr-4": {
             "PW\\GA\\": "src",
             "PW\\GA\\Example\\": "examples"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PW\\GA\\Test\\": "tests"
         }
     },
     "authors": [
