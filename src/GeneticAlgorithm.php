@@ -12,8 +12,8 @@ class GeneticAlgorithm implements LoggerAwareInterface
 {
     const MAX_ALLOWED_POPULATION = 50000;
 
-    const SORT_TYPE_ASC  = 0;
-    const SORT_TYPE_DESC = 1;
+    const SORT_DIR_ASC  = 0;
+    const SORT_DIR_DESC = 1;
 
     /**
      * @var FitnessCalculatorInterface
@@ -63,7 +63,7 @@ class GeneticAlgorithm implements LoggerAwareInterface
     /**
      * @var int
      */
-    protected $sortDir = GeneticAlgorithm::SORT_TYPE_DESC;
+    protected $sortDir = GeneticAlgorithm::SORT_DIR_DESC;
 
     /**
      * @param FitnessCalculatorInterface $fitnessCalculator
@@ -239,7 +239,7 @@ class GeneticAlgorithm implements LoggerAwareInterface
             if ($fitnessA == $fitnessB) {
                 return 0;
             }
-            return $this->sortDir === GeneticAlgorithm::SORT_TYPE_ASC
+            return $this->sortDir === GeneticAlgorithm::SORT_DIR_ASC
                 ? (($fitnessA < $fitnessB) ? -1 : 1)
                 : (($fitnessA < $fitnessB) ? 1 : -1)
                 ;

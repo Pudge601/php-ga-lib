@@ -76,7 +76,7 @@ class TravellingSalesman implements FitnessCalculatorInterface
             ->setLogFrequency($options['logFrequency'])
             ->setEntropy($options['entropy'])
             ->setPopulationCount($options['populationCount'])
-            ->setSortDir(GeneticAlgorithm::SORT_TYPE_ASC);
+            ->setSortDir(GeneticAlgorithm::SORT_DIR_ASC);
 
         $solution = $gaEngine->findSolution($options['maxIterations']);
 
