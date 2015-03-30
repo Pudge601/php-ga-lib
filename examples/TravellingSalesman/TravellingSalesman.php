@@ -87,7 +87,7 @@ class TravellingSalesman implements FitnessCalculatorInterface
      */
     public function calculateFitness(array $value)
     {
-        return $this->calculateSquaredDistanceSum($value);
+        return $this->calculateTotalDistance($value);
     }
 
     /**
