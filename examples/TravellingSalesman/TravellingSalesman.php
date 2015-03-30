@@ -3,6 +3,7 @@
 namespace PW\GA\Example\TravellingSalesman;
 
 use PW\GA\ChromosomeGenerator;
+use PW\GA\Config;
 use PW\GA\CrossoverMethod;
 use PW\GA\Example\LoggerError;
 use PW\GA\FitnessCalculatorInterface;
@@ -63,22 +64,19 @@ class TravellingSalesman implements FitnessCalculatorInterface
      */
     public function findSolution($options)
     {
-        $gaEngine = $this->createGAEngine();
-
         $options = array_merge([
-            'logFrequency'    => 100,
-            'entropy'         => 0.7,
-            'populationCount' => 100,
-            'maxIterations'   => 1000
+            Config::LOG_FREQUENCY    => 100,
+            Config::ENTROPY          => 0.7,
+            Config::POPULATION_COUNT => 50,
+            Config::MAX_ITERATIONS   => 1000,
+            Config::SORT_DIR         => GeneticAlgorithm::SORT_DIR_ASC,
         ], $options);
 
-        $gaEngine->setLogger(new LoggerError())
-            ->setLogFrequency($options['logFrequency'])
-            ->setEntropy($options['entropy'])
-            ->setPopulationCount($options['populationCount'])
-            ->setSortDir(GeneticAlgorithm::SORT_DIR_ASC);
+        $gaEngine = $this->createGAEngine($options);
 
-        $solution = $gaEngine->findSolution($options['maxIterations']);
+        $gaEngine->setLogger(new LoggerError());
+
+        $solution = $gaEngine->findSolution();
 
         return $solution;
     }
@@ -129,15 +127,17 @@ class TravellingSalesman implements FitnessCalculatorInterface
     }
 
     /**
+     * @param array $options
      * @return GeneticAlgorithm
      */
-    protected function createGAEngine()
+    protected function createGAEngine(array $options)
     {
         $ga = new GeneticAlgorithm(
             $this,
             new ChromosomeGenerator\OrderedList($this->cities),
             new CrossoverMethod\OrderedList\OrderCrossover(),
-            new MutateMethod\GeneSwap()
+            new MutateMethod\GeneSwap(),
+            new Config($options)
         );
 
         return $ga;
