@@ -1,0 +1,19 @@
+{
+    "name": "pw/ga",
+    "description": "Generic Algorithm Library",
+    "require": {
+        "psr/log": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PW\\GA\\": "src",
+            "PW\\GA\\Example\\": "examples"
+        }
+    },
+    "authors": [
+        {
+            "name": "Martin Price",
+            "email": "martin.price@emailcenteruk.com"
+        }
+    ]
+}
