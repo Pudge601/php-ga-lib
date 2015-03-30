@@ -72,7 +72,14 @@ class TravellingSalesman implements FitnessCalculatorInterface
             Config::SORT_DIR         => GeneticAlgorithm::SORT_DIR_ASC,
         ], $options);
 
-        $gaEngine = $this->createGAEngine($options);
+        $gaEngine = new GeneticAlgorithm(
+            $this,
+            new ChromosomeGenerator\OrderedList(range(0, count($this->cities) - 1)),
+//            new CrossoverMethod\OrderedList\EdgeRecombination(),
+            new CrossoverMethod\OrderedList\OrderCrossover(),
+            new MutateMethod\GeneSwap(),
+            new Config($options)
+        );
 
         $gaEngine->setLogger(new LoggerError());
 
@@ -126,24 +133,6 @@ class TravellingSalesman implements FitnessCalculatorInterface
             $lastCity = $city;
         }
         return $distance;
-    }
-
-    /**
-     * @param array $options
-     * @return GeneticAlgorithm
-     */
-    protected function createGAEngine(array $options)
-    {
-        $ga = new GeneticAlgorithm(
-            $this,
-            new ChromosomeGenerator\OrderedList(range(0, count($this->cities) - 1)),
-//            new CrossoverMethod\OrderedList\EdgeRecombination(),
-            new CrossoverMethod\OrderedList\OrderCrossover(),
-            new MutateMethod\GeneSwap(),
-            new Config($options)
-        );
-
-        return $ga;
     }
 
 }
