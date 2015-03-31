@@ -273,9 +273,10 @@ class GeneticAlgorithm implements LoggerAwareInterface
                 $breedPartners[1]->getValue()
             );
             foreach ($offspring as $childValue) {
-                if ($i < $crossoverCount) {
-                    $this->addChromosome(new Chromosome($childValue));
-                    $i++;
+                $this->addChromosome(new Chromosome($childValue));
+                $i++;
+                if ($i === $crossoverCount) {
+                    break;
                 }
             }
         }
