@@ -31,7 +31,7 @@ class ModifyWord implements MutateMethodInterface
         $charChanges = ceil($entropy * ($valueLength / 2));
         $alphabet    = $this->alphabet;
         for ($i = 0; $i < $charChanges; $i++) {
-            $charIndex = mt_rand(0, $valueLength - 2);
+            $charIndex = mt_rand(0, $valueLength - 1);
             $newChar   = $alphabet[array_rand($alphabet)];
             $value[$charIndex] = $newChar;
         }
