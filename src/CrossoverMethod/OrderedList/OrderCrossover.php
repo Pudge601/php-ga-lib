@@ -32,7 +32,7 @@ class OrderCrossover implements CrossoverMethodInterface
             }
         }
 
-        return $child;
+        return [$child];
     }
 
 }

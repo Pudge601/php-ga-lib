@@ -14,9 +14,11 @@ class OnePointCrossoverTest extends \PHPUnit_Framework_TestCase
         $parentB = ['G', 'I', 'H', 'L', 'J', 'K'];
 
         $crossoverMethod = new OnePointCrossover();
-        $result = $crossoverMethod->crossover($parentA, $parentB);
+        $offspring = $crossoverMethod->crossover($parentA, $parentB);
 
-        $this->assertEquals(count($parentA), count($result));
+        foreach ($offspring as $childValue) {
+            $this->assertEquals(count($parentA), count($childValue));
+        }
     }
 
 }

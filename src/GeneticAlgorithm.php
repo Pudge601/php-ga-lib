@@ -261,18 +261,23 @@ class GeneticAlgorithm implements LoggerAwareInterface
     protected function crossover($crossoverCount)
     {
         $this->weightedSelector->init($this->population, $this->config->get(Config::WEIGHTING_COEF));
-        for ($i = 0; $i < $crossoverCount; $i++) {
+        for ($i = 0; $i < $crossoverCount;) {
             /* @var Chromosome[] $breedPartners */
             $breedPartners = [];
             for ($j = 0; $j < 2; $j++) {
                 $breedPartners[] = $this->weightedSelector->getChromosome();
             }
 
-            $newValue = $this->crossoverMethod->crossover(
+            $offspring = $this->crossoverMethod->crossover(
                 $breedPartners[0]->getValue(),
                 $breedPartners[1]->getValue()
             );
-            $this->addChromosome(new Chromosome($newValue));
+            foreach ($offspring as $childValue) {
+                if ($i < $crossoverCount) {
+                    $this->addChromosome(new Chromosome($childValue));
+                    $i++;
+                }
+            }
         }
     }
 

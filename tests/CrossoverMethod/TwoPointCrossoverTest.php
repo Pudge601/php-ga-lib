@@ -14,9 +14,11 @@ class TwoPointCrossoverTest extends \PHPUnit_Framework_TestCase
         $parentB = ['1', '2', '3', '4', '5', '6'];
 
         $crossoverMethod = new TwoPointCrossover();
-        $result = $crossoverMethod->crossover($parentA, $parentB);
+        $offspring = $crossoverMethod->crossover($parentA, $parentB);
 
-        $this->assertEquals(count($parentA), count($result));
+        foreach ($offspring as $childValue) {
+            $this->assertEquals(count($parentA), count($childValue));
+        }
     }
 
 }

@@ -32,7 +32,7 @@ class EdgeRecombination implements CrossoverMethodInterface
             }
         }
 
-        return $child;
+        return [$child];
     }
 
     /**

@@ -14,17 +14,20 @@ class OrderCrossoverTest extends \PHPUnit_Framework_TestCase
         $parentB = ['C', 'A', 'B', 'D', 'E', 'F'];
 
         $crossoverMethod = new OrderCrossover();
-        $result = $crossoverMethod->crossover($parentA, $parentB);
-
-        $this->assertEquals(count($parentA), count($result));
+        $offspring = $crossoverMethod->crossover($parentA, $parentB);
 
         $sortedExpected = $parentA;
         sort($sortedExpected);
 
-        $sortedActual = $result;
-        sort($sortedActual);
+        foreach ($offspring as $childValue) {
+            $this->assertEquals(count($parentA), count($childValue));
 
-        $this->assertEquals($sortedExpected, $sortedActual);
+            $sortedActual = $childValue;
+            sort($sortedActual);
+
+            $this->assertEquals($sortedExpected, $sortedActual);
+
+        }
     }
 
 }
