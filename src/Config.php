@@ -16,7 +16,7 @@ class Config
      * @var array
      */
     protected $data = [
-        self::ENTROPY          => 0,5,
+        self::ENTROPY          => 0.5,
         self::POPULATION_COUNT => 50,
         self::LOG_FREQUENCY    => 10,
         self::SORT_DIR         => GeneticAlgorithm::SORT_DIR_DESC,
