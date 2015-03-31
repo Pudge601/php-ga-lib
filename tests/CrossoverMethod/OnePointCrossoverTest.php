@@ -1,6 +1,6 @@
 <?php
 
-namespace PW\GA\Test\CrossoverMethod\OrderedList;
+namespace PW\GA\Test\CrossoverMethod;
 
 
 use PW\GA\CrossoverMethod\OnePointCrossover;
