@@ -50,7 +50,7 @@ class HelloWorld implements FitnessCalculatorInterface, SuccessCriteriaInterface
         $gaEngine = new GeneticAlgorithm(
             $this,
             new ChromosomeGenerator\Word($this->alphabet, strlen($this->target)),
-            new CrossoverMethod\OnePointCrossover(),
+            new CrossoverMethod\TwoPointCrossover(),
             new MutateMethod\ModifyWord($this->alphabet),
             new Config($options)
         );
