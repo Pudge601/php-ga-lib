@@ -38,6 +38,11 @@ class GeneticAlgorithm implements LoggerAwareInterface
     protected $weightedSelector;
 
     /**
+     * @var SuccessCriteriaInterface
+     */
+    protected $successCriteria;
+
+    /**
      * @var LoggerInterface
      */
     protected $logger;
@@ -134,6 +139,16 @@ class GeneticAlgorithm implements LoggerAwareInterface
     }
 
     /**
+     * @param SuccessCriteriaInterface $successCriteria
+     * @return $this
+     */
+    public function setSuccessCriteria(SuccessCriteriaInterface $successCriteria)
+    {
+        $this->successCriteria = $successCriteria;
+        return $this;
+    }
+
+    /**
      * Search for a solution, returning the best chromosome at the end
      *
      * @return mixed[]
@@ -148,6 +163,12 @@ class GeneticAlgorithm implements LoggerAwareInterface
         $logFrequency  = $this->config->get(Config::LOG_FREQUENCY);
         for ($i = 0; $i < $maxIterations; $i++) {
             $stats = $this->runIteration();
+
+            if ($this->validateSuccess()) {
+                $this->log('Success criteria achieved');
+                break;
+            }
+
             if ($i % $logFrequency === 0) {
                 $this->logStatus($i, $stats);
             }
@@ -301,6 +322,18 @@ class GeneticAlgorithm implements LoggerAwareInterface
         $mutateCount    = $available - $crossoverCount;
 
         return [$cullCount, $crossoverCount, $mutateCount];
+    }
+
+    /**
+     * @return bool
+     */
+    protected function validateSuccess()
+    {
+        if (isset($this->successCriteria)) {
+            $bestSolution = $this->population[0];
+            return $this->successCriteria->validateSuccess($bestSolution->getValue());
+        }
+        return false;
     }
 
     /**
