@@ -4,8 +4,8 @@ namespace PW\GA;
 
 class Config
 {
-
-    const ENTROPY          = 'entropy';
+    const CHURN_ENTROPY    = 'churnEntropy';
+    const MUTATE_ENTROPY   = 'mutateEntropy';
     const POPULATION_COUNT = 'populationCount';
     const LOG_FREQUENCY    = 'logFrequency';
     const SORT_DIR         = 'sortDir';
@@ -16,7 +16,8 @@ class Config
      * @var array
      */
     protected $data = [
-        self::ENTROPY          => 0.5,
+        self::CHURN_ENTROPY    => 0.5,
+        self::MUTATE_ENTROPY   => 0.5,
         self::POPULATION_COUNT => 50,
         self::LOG_FREQUENCY    => 10,
         self::SORT_DIR         => GeneticAlgorithm::SORT_DIR_DESC,
@@ -69,6 +70,24 @@ class Config
             $value = $this->{$filterMethod}($value);
         }
         return $value;
+    }
+
+    /**
+     * @param $entropy
+     * @return float
+     */
+    public function filterChurnEntropy($entropy)
+    {
+        return $this->filterEntropy($entropy);
+    }
+
+    /**
+     * @param $entropy
+     * @return float
+     */
+    public function filterMutateEntropy($entropy)
+    {
+        return $this->filterEntropy($entropy);
     }
 
     /**

@@ -283,12 +283,12 @@ class GeneticAlgorithm implements LoggerAwareInterface
      */
     protected function mutate($mutateCount)
     {
-        $entropy = $this->config->get(Config::ENTROPY);
+        $mutateEntropy = $this->config->get(Config::MUTATE_ENTROPY);
         $this->weightedSelector->init($this->population, $this->config->get(Config::WEIGHTING_COEF));
         for ($i = 0; $i < $mutateCount; $i++) {
             $mutateChromosome = $this->weightedSelector->getChromosome();
 
-            $newValue = $this->mutateMethod->mutate($mutateChromosome->getValue(), $entropy);
+            $newValue = $this->mutateMethod->mutate($mutateChromosome->getValue(), $mutateEntropy);
             $this->addChromosome(new Chromosome($newValue));
         }
     }
@@ -311,10 +311,10 @@ class GeneticAlgorithm implements LoggerAwareInterface
      */
     protected function calculateChurn()
     {
-        $entropy         = $this->config->get(Config::ENTROPY);
+        $churnEntropy    = $this->config->get(Config::CHURN_ENTROPY);
         $populationCount = count($this->population);
 
-        $cullCount = floor($entropy * ($populationCount * 0.5));
+        $cullCount = floor($churnEntropy * ($populationCount * 0.5));
         $remaining = $populationCount - $cullCount;
         $available = $this->config->get(Config::POPULATION_COUNT) - $remaining;
 

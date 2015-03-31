@@ -14,6 +14,8 @@ $solution = $travellingSalesman->findSolution([
     \PW\GA\Config::MAX_ITERATIONS   => 10000,
     \PW\GA\Config::POPULATION_COUNT => 100,
     \PW\GA\Config::LOG_FREQUENCY    => 1000,
+    \PW\GA\Config::CHURN_ENTROPY    => 0.6,
+    \PW\GA\Config::MUTATE_ENTROPY   => 0.4,
 ]);
 
 $totalDistance = $travellingSalesman->calculateTotalDistance($solution);
