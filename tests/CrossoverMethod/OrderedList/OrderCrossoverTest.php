@@ -13,8 +13,8 @@ class OrderCrossoverTest extends \PHPUnit_Framework_TestCase
         $parentA = ['A', 'B', 'C', 'E', 'F', 'D'];
         $parentB = ['C', 'A', 'B', 'D', 'E', 'F'];
 
-        $edgeRecombination = new OrderCrossover();
-        $result = $edgeRecombination->crossover($parentA, $parentB);
+        $crossoverMethod = new OrderCrossover();
+        $result = $crossoverMethod->crossover($parentA, $parentB);
 
         $this->assertEquals(count($parentA), count($result));
 
