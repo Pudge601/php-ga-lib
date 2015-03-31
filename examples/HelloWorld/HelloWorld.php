@@ -35,7 +35,6 @@ class HelloWorld implements FitnessCalculatorInterface, SuccessCriteriaInterface
 
         // ensure all characters in 'target' are in 'alphabet'
         $this->alphabet = array_unique(array_merge($this->alphabet, str_split($this->target)));
-        error_log(implode('', $this->alphabet));
     }
 
     /**
