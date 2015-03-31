@@ -17,10 +17,16 @@ class OnePointCrossover implements CrossoverMethodInterface
         $valueCount     = count($parentA);
         $crossoverPoint = mt_rand(0, $valueCount - 1);
 
-        return [array_merge(
-            array_slice($parentA, 0, $crossoverPoint),
-            array_slice($parentB, $crossoverPoint)
-        )];
+        return [
+            array_merge(
+                array_slice($parentA, 0, $crossoverPoint),
+                array_slice($parentB, $crossoverPoint)
+            ),
+            array_merge(
+                array_slice($parentB, 0, $crossoverPoint),
+                array_slice($parentA, $crossoverPoint)
+            )
+        ];
     }
 
 }
