@@ -65,11 +65,7 @@ class TravellingSalesman implements FitnessCalculatorInterface
     public function findSolution($options)
     {
         $options = array_merge([
-            Config::LOG_FREQUENCY    => 100,
-            Config::ENTROPY          => 0.7,
-            Config::POPULATION_COUNT => 50,
-            Config::MAX_ITERATIONS   => 1000,
-            Config::SORT_DIR         => GeneticAlgorithm::SORT_DIR_ASC,
+            Config::SORT_DIR => GeneticAlgorithm::SORT_DIR_ASC,
         ], $options);
 
         $gaEngine = new GeneticAlgorithm(

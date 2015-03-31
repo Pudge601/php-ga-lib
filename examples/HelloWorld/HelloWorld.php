@@ -44,11 +44,7 @@ class HelloWorld implements FitnessCalculatorInterface, SuccessCriteriaInterface
     public function findSolution($options)
     {
         $options = array_merge([
-            Config::LOG_FREQUENCY    => 100,
-            Config::ENTROPY          => 0.7,
-            Config::POPULATION_COUNT => 50,
-            Config::MAX_ITERATIONS   => 1000,
-            Config::SORT_DIR         => GeneticAlgorithm::SORT_DIR_DESC,
+            Config::SORT_DIR => GeneticAlgorithm::SORT_DIR_DESC,
         ], $options);
 
         $gaEngine = new GeneticAlgorithm(
