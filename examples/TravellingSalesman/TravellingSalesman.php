@@ -5,7 +5,6 @@ namespace PW\GA\Example\TravellingSalesman;
 use PW\GA\ChromosomeGenerator;
 use PW\GA\Config;
 use PW\GA\CrossoverMethod;
-use PW\GA\Example\LoggerError;
 use PW\GA\FitnessCalculatorInterface;
 use PW\GA\GeneticAlgorithm;
 use PW\GA\MutateMethod;
@@ -60,9 +59,10 @@ class TravellingSalesman implements FitnessCalculatorInterface
 
     /**
      * @param array $options
+     * @param int $iterations
      * @return \mixed[]
      */
-    public function findSolution($options)
+    public function findSolution($options, $iterations)
     {
         $options = array_merge([
             Config::SORT_DIR => GeneticAlgorithm::SORT_DIR_ASC,
@@ -77,11 +77,10 @@ class TravellingSalesman implements FitnessCalculatorInterface
             new Config($options)
         );
 
-        $gaEngine->setLogger(new LoggerError());
+        $gaEngine->initPopulation()
+            ->optimise($iterations);
 
-        $solution = $gaEngine->findSolution();
-
-        return $solution;
+        return $gaEngine->getFittest()->getValue();
     }
 
     /**

@@ -9,7 +9,6 @@ class Config
     const POPULATION_COUNT = 'populationCount';
     const LOG_FREQUENCY    = 'logFrequency';
     const SORT_DIR         = 'sortDir';
-    const MAX_ITERATIONS   = 'maxIterations';
     const WEIGHTING_COEF   = 'weightingCoef';
 
     /**
@@ -21,7 +20,6 @@ class Config
         self::POPULATION_COUNT => 50,
         self::LOG_FREQUENCY    => 10,
         self::SORT_DIR         => GeneticAlgorithm::SORT_DIR_DESC,
-        self::MAX_ITERATIONS   => 5000,
         self::WEIGHTING_COEF   => 0.5
     ];
 

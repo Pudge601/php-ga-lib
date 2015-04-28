@@ -2,10 +2,7 @@
 
 namespace PW\GA;
 
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerInterface;
-
-class GeneticAlgorithm implements LoggerAwareInterface
+class GeneticAlgorithm
 {
     const MAX_ALLOWED_POPULATION = 50000;
 
@@ -38,16 +35,6 @@ class GeneticAlgorithm implements LoggerAwareInterface
     protected $weightedSelector;
 
     /**
-     * @var SuccessCriteriaInterface
-     */
-    protected $successCriteria;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
      * @var Chromosome[]
      */
     protected $population = [];
@@ -78,16 +65,6 @@ class GeneticAlgorithm implements LoggerAwareInterface
         $this->config              = $config ?: new Config();
 
         $this->weightedSelector    = new WeightedSelector();
-    }
-
-    /**
-     * @param LoggerInterface $logger
-     * @return $this
-     */
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-        return $this;
     }
 
     /**
@@ -139,45 +116,6 @@ class GeneticAlgorithm implements LoggerAwareInterface
     }
 
     /**
-     * @param SuccessCriteriaInterface $successCriteria
-     * @return $this
-     */
-    public function setSuccessCriteria(SuccessCriteriaInterface $successCriteria)
-    {
-        $this->successCriteria = $successCriteria;
-        return $this;
-    }
-
-    /**
-     * Search for a solution, returning the best chromosome at the end
-     *
-     * @return mixed[]
-     */
-    public function findSolution()
-    {
-        $this->initPopulation();
-
-        $this->sortPopulation();
-
-        $maxIterations = $this->config->get(Config::MAX_ITERATIONS);
-        $logFrequency  = $this->config->get(Config::LOG_FREQUENCY);
-        for ($i = 0; $i < $maxIterations; $i++) {
-            $stats = $this->runIteration();
-
-            if ($this->validateSuccess()) {
-                $this->log('Success criteria achieved');
-                break;
-            }
-
-            if ($i % $logFrequency === 0) {
-                $this->logStatus($i, $stats);
-            }
-        }
-
-        return $this->population[0]->getValue();
-    }
-
-    /**
      * @return $this
      */
     public function initPopulation()
@@ -194,7 +132,63 @@ class GeneticAlgorithm implements LoggerAwareInterface
             $this->addChromosome($chromosome);
         }
 
+        $this->sortPopulation();
+
         return $this;
+    }
+
+    /**
+     * Search for a solution, returning the best chromosome at the end
+     *
+     * @param int $iterations
+     */
+    public function optimise($iterations)
+    {
+        for ($i = 0; $i < $iterations; $i++) {
+            $this->runIteration();
+        }
+    }
+
+    /**
+     * @param SuccessCriteriaInterface $successCriteria
+     * @param int $maxIterations
+     */
+    public function optimiseUntil(SuccessCriteriaInterface $successCriteria, $maxIterations = 50000)
+    {
+        do {
+            $this->runIteration();
+        } while (!$successCriteria->validateSuccess($this->getFittest()) && --$maxIterations > 0);
+    }
+
+    /**
+     * @return Chromosome
+     */
+    public function getFittest()
+    {
+        return $this->population[0];
+    }
+
+    /**
+     * Get the current stats of the population
+     *
+     * @return array
+     */
+    public function getStats()
+    {
+        $fitnessTotal = 0;
+        /* @var Chromosome $chromosome */
+        foreach ($this->population as $chromosome) {
+            $fitnessTotal += $chromosome->getFitness($this->fitnessCalculator);
+        }
+        $populationCount = count($this->population);
+        $averageFitness  = $fitnessTotal / $populationCount;
+        $bestFitness     = $this->getFittest()->getFitness($this->fitnessCalculator);
+
+        return [
+            'populationCount' => $populationCount,
+            'bestFitness'     => $bestFitness,
+            'averageFitness'  => $averageFitness,
+        ];
     }
 
     /**
@@ -214,12 +208,6 @@ class GeneticAlgorithm implements LoggerAwareInterface
         $this->mutate($mutateCount);
 
         $this->sortPopulation();
-
-        return [
-            'culls'      => $cullCount,
-            'crossovers' => $crossoverCount,
-            'mutations'  => $mutateCount,
-        ];
     }
 
     /**
@@ -330,55 +318,5 @@ class GeneticAlgorithm implements LoggerAwareInterface
         $mutateCount    = $available - $crossoverCount;
 
         return [$cullCount, $crossoverCount, $mutateCount];
-    }
-
-    /**
-     * @return bool
-     */
-    protected function validateSuccess()
-    {
-        if (isset($this->successCriteria)) {
-            $bestSolution = $this->population[0];
-            return $this->successCriteria->validateSuccess($bestSolution->getValue());
-        }
-        return false;
-    }
-
-    /**
-     * Log the current status of the population
-     *
-     * @param int $iterationNumber
-     * @param array $stats
-     */
-    protected function logStatus($iterationNumber, $stats)
-    {
-        $fitnessTotal = 0;
-        /* @var Chromosome $chromosome */
-        foreach ($this->population as $chromosome) {
-            $fitnessTotal += $chromosome->getFitness($this->fitnessCalculator);
-        }
-        $populationCount = count($this->population);
-        $averageFitness  = $fitnessTotal / $populationCount;
-        $bestFitness     = $this->population[0]->getFitness($this->fitnessCalculator);
-
-        $this->log(
-            "Iteration #$iterationNumber: " .
-            "Population: $populationCount, " .
-            "Culls: {$stats['culls']}, " .
-            "Crossovers: {$stats['crossovers']}, " .
-            "Mutations: {$stats['mutations']}, " .
-            "Best fitness: $bestFitness, " .
-            "Average fitness: $averageFitness"
-        );
-    }
-
-    /**
-     * @param string $message
-     */
-    protected function log($message)
-    {
-        if (isset($this->logger)) {
-            $this->logger->info($message);
-        }
     }
 }

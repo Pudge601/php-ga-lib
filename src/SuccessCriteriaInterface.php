@@ -6,9 +6,9 @@ interface SuccessCriteriaInterface
 {
 
     /**
-     * @param array $solution
+     * @param Chromosome $solution
      * @return bool
      */
-    public function validateSuccess(array $solution);
+    public function validateSuccess(Chromosome $solution);
 
 }

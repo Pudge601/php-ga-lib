@@ -2,13 +2,13 @@
 
 namespace PW\GA\Example\HelloWorld;
 
+use PW\GA\Chromosome;
 use PW\GA\ChromosomeGenerator;
 use PW\GA\Config;
 use PW\GA\CrossoverMethod;
 use PW\GA\FitnessCalculatorInterface;
 use PW\GA\GeneticAlgorithm;
 use PW\GA\MutateMethod;
-use PW\GA\Example\LoggerError;
 use PW\GA\SuccessCriteriaInterface;
 
 class HelloWorld implements FitnessCalculatorInterface, SuccessCriteriaInterface
@@ -39,9 +39,10 @@ class HelloWorld implements FitnessCalculatorInterface, SuccessCriteriaInterface
 
     /**
      * @param array $options
+     * @param int $maxIterations
      * @return \mixed[]
      */
-    public function findSolution($options)
+    public function findSolution($options, $maxIterations)
     {
         $options = array_merge([
             Config::SORT_DIR => GeneticAlgorithm::SORT_DIR_DESC,
@@ -55,12 +56,10 @@ class HelloWorld implements FitnessCalculatorInterface, SuccessCriteriaInterface
             new Config($options)
         );
 
-        $gaEngine->setSuccessCriteria($this)
-            ->setLogger(new LoggerError());
+        $gaEngine->initPopulation()
+            ->optimiseUntil($this, $maxIterations);
 
-        $solution = $gaEngine->findSolution();
-
-        return $solution;
+        return $gaEngine->getFittest()->getValue();
     }
 
     /**
@@ -76,12 +75,12 @@ class HelloWorld implements FitnessCalculatorInterface, SuccessCriteriaInterface
     }
 
     /**
-     * @param array $value
+     * @param Chromosome $fittest
      * @return bool
      */
-    public function validateSuccess(array $value)
+    public function validateSuccess(Chromosome $fittest)
     {
-        return implode('', $value) === $this->target;
+        return implode('', $fittest->getValue()) === $this->target;
     }
 
 }
