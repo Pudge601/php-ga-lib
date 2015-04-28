@@ -260,12 +260,13 @@ class GeneticAlgorithm implements LoggerAwareInterface
      */
     protected function crossover($crossoverCount)
     {
-        $this->weightedSelector->init($this->population, $this->config->get(Config::WEIGHTING_COEF));
+        $this->weightedSelector->init(count($this->population), $this->config->get(Config::WEIGHTING_COEF));
         for ($i = 0; $i < $crossoverCount;) {
             /* @var Chromosome[] $breedPartners */
             $breedPartners = [];
             for ($j = 0; $j < 2; $j++) {
-                $breedPartners[] = $this->weightedSelector->getChromosome();
+                $index = $this->weightedSelector->nextIndex();
+                $breedPartners[] = $this->population[$index];
             }
 
             $offspring = $this->crossoverMethod->crossover(
@@ -290,9 +291,10 @@ class GeneticAlgorithm implements LoggerAwareInterface
     protected function mutate($mutateCount)
     {
         $mutateEntropy = $this->config->get(Config::MUTATE_ENTROPY);
-        $this->weightedSelector->init($this->population, $this->config->get(Config::WEIGHTING_COEF));
+        $this->weightedSelector->init(count($this->population), $this->config->get(Config::WEIGHTING_COEF));
         for ($i = 0; $i < $mutateCount; $i++) {
-            $mutateChromosome = $this->weightedSelector->getChromosome();
+            $index = $this->weightedSelector->nextIndex();
+            $mutateChromosome = $this->population[$index];
 
             $newValue = $this->mutateMethod->mutate($mutateChromosome->getValue(), $mutateEntropy);
             $this->addChromosome(new Chromosome($newValue));

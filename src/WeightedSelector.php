@@ -7,11 +7,6 @@ class WeightedSelector implements WeightedSelectorInterface
 {
 
     /**
-     * @var Chromosome[]
-     */
-    protected $population;
-
-    /**
      * @var float
      */
     protected $weightingCoef;
@@ -24,37 +19,44 @@ class WeightedSelector implements WeightedSelectorInterface
     /**
      * @var float
      */
+    protected $minWeightedValue = 1;
+
+    /**
+     * @var float
+     */
     protected $maxWeightedValue;
 
     /**
-     * @var int
-     */
-    protected $randMax;
-
-    /**
-     * @param Chromosome[] $population
+     * @param int $populationCount
      * @param float $weightingCoef
      * @returns $this
      */
-    public function init($population, $weightingCoef)
+    public function init($populationCount, $weightingCoef)
     {
-        $this->population       = $population;
         $this->weightingCoef    = $weightingCoef;
-        $this->populationCount  = count($population);
+        $this->populationCount  = $populationCount;
         $this->maxWeightedValue = pow(1 + $weightingCoef, $this->populationCount);
-        $this->randMax          = mt_getrandmax();
         return $this;
     }
 
     /**
-     * @return Chromosome
+     * @return int
      */
-    public function getChromosome()
+    public function nextIndex()
     {
-        $weightedValue = (mt_rand() / $this->randMax) * $this->maxWeightedValue;
+        $weightedValue = $this->getRandomFloat($this->minWeightedValue, $this->maxWeightedValue);
         $logValue = floor(log($weightedValue, 1 + $this->weightingCoef));
-        $index = ($this->populationCount - $logValue) - 1;
-        return $this->population[$index];
+        return ($this->populationCount - $logValue) - 1;
+    }
+
+    /**
+     * @param float $min
+     * @param float $max
+     * @return float
+     */
+    protected function getRandomFloat($min, $max)
+    {
+        return $min + (mt_rand() / mt_getrandmax()) * ($max - $min);
     }
 
 }

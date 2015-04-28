@@ -7,15 +7,15 @@ interface WeightedSelectorInterface
 {
 
     /**
-     * @param $population
+     * @param $populationCount
      * @param $weightingCoef
      * @return $this
      */
-    public function init($population, $weightingCoef);
+    public function init($populationCount, $weightingCoef);
 
     /**
-     * @return Chromosome
+     * @return int
      */
-    public function getChromosome();
+    public function nextIndex();
 
 }
