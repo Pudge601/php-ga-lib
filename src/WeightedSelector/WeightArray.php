@@ -30,7 +30,7 @@ class WeightArray implements WeightedSelectorInterface
     /**
      * @param int $populationCount
      * @param float $weightingCoef
-     * @returns $this
+     * @return $this
      */
     public function init($populationCount, $weightingCoef)
     {
