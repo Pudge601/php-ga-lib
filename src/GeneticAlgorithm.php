@@ -140,7 +140,7 @@ class GeneticAlgorithm
     }
 
     /**
-     * Search for a solution, returning the best chromosome at the end
+     * Run the genetic algorithm engine 'iterations' times
      *
      * @param int $iterations
      */
@@ -152,6 +152,8 @@ class GeneticAlgorithm
     }
 
     /**
+     * Run the genetic algorithm engine until the success criteria is met, or for maxIterations
+     *
      * @param SuccessCriteriaInterface $successCriteria
      * @param int $maxIterations
      */
