@@ -2,6 +2,8 @@
 
 namespace PW\GA;
 
+use PW\GA\WeightedSelector;
+
 class GeneticAlgorithm
 {
     const MAX_ALLOWED_POPULATION = 50000;
@@ -64,7 +66,7 @@ class GeneticAlgorithm
         $this->mutateMethod        = $mutateMethod;
         $this->config              = $config ?: new Config();
 
-        $this->weightedSelector    = new WeightedSelector();
+        $this->weightedSelector    = new WeightedSelector\WeightArray();
     }
 
     /**

@@ -11,6 +11,7 @@ $travellingSalesman = (new \PW\GA\Example\TravellingSalesman\TravellingSalesman(
 $cities = $travellingSalesman->getCities();
 
 $solution = $travellingSalesman->findSolution([
+    \PW\GA\Config::WEIGHTING_COEF   => 0.3,
     \PW\GA\Config::POPULATION_COUNT => 100,
     \PW\GA\Config::CHURN_ENTROPY    => 0.6,
     \PW\GA\Config::MUTATE_ENTROPY   => 0.4,
