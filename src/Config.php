@@ -7,7 +7,6 @@ class Config
     const CHURN_ENTROPY    = 'churnEntropy';
     const MUTATE_ENTROPY   = 'mutateEntropy';
     const POPULATION_COUNT = 'populationCount';
-    const LOG_FREQUENCY    = 'logFrequency';
     const SORT_DIR         = 'sortDir';
     const WEIGHTING_COEF   = 'weightingCoef';
 
@@ -18,7 +17,6 @@ class Config
         self::CHURN_ENTROPY    => 0.5,
         self::MUTATE_ENTROPY   => 0.5,
         self::POPULATION_COUNT => 50,
-        self::LOG_FREQUENCY    => 10,
         self::SORT_DIR         => GeneticAlgorithm::SORT_DIR_DESC,
         self::WEIGHTING_COEF   => 0.5
     ];
