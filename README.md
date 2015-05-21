@@ -61,12 +61,13 @@ class HelloSuccessCriteria implements \PW\GA\SuccessCriteriaInterface
 Now you can create an instance of the genetic algorithm engine, configure, and run;
 
 ```php
-$target = 'Hello World';
+$target   = 'Hello World';
+$alphabet = array_unique(array_merge(range('A', 'z'), str_split($target)));
 
 $gaEngine = new \PW\GA\GeneticAlgorithm(
     new HelloFitnessCalculator($target),
     new \PW\GA\CrossoverMethod\TwoPointCrossover(),
-    new \PW\GA\MutateMethod\ModifyWord($this->alphabet),
+    new \PW\GA\MutateMethod\ModifyWord($alphabet),
     new \PW\GA\Config([
         \PW\GA\Config::SORT_DIR         => \PW\GA\GeneticAlgorithm::SORT_DIR_DESC,
         \PW\GA\Config::POPULATION_COUNT => 1000,
@@ -76,7 +77,7 @@ $gaEngine = new \PW\GA\GeneticAlgorithm(
     ])
 );
 
-$gaEngine->initPopulation(new \PW\GA\ChromosomeGenerator\Word($this->alphabet, strlen($this->target)))
+$gaEngine->initPopulation(new \PW\GA\ChromosomeGenerator\Word($alphabet, strlen($target)))
     ->optimiseUntil(new HelloSuccessCriteria($target), 10000);
 
 $fittest = $gaEngine->getFittest()->getValue();
