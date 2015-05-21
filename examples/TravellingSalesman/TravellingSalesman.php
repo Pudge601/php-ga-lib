@@ -70,14 +70,13 @@ class TravellingSalesman implements FitnessCalculatorInterface
 
         $gaEngine = new GeneticAlgorithm(
             $this,
-            new ChromosomeGenerator\OrderedList(range(0, count($this->cities) - 1)),
 //            new CrossoverMethod\OrderedList\EdgeRecombination(),
             new CrossoverMethod\OrderedList\OrderCrossover(),
             new MutateMethod\GeneSwap(),
             new Config($options)
         );
 
-        $gaEngine->initPopulation()
+        $gaEngine->initPopulation(new ChromosomeGenerator\OrderedList(range(0, count($this->cities) - 1)))
             ->optimise($iterations);
 
         return $gaEngine->getFittest()->getValue();

@@ -17,11 +17,6 @@ class GeneticAlgorithm
     protected $fitnessCalculator;
 
     /**
-     * @var ChromosomeGeneratorInterface
-     */
-    protected $chromosomeGenerator;
-
-    /**
      * @var CrossoverMethodInterface
      */
     protected $crossoverMethod;
@@ -48,20 +43,17 @@ class GeneticAlgorithm
 
     /**
      * @param FitnessCalculatorInterface $fitnessCalculator
-     * @param ChromosomeGeneratorInterface $chromosomeGenerator
      * @param CrossoverMethodInterface $crossoverMethod
      * @param MutateMethodInterface $mutateMethod
      * @param Config $config
      */
     public function __construct(
         FitnessCalculatorInterface $fitnessCalculator,
-        ChromosomeGeneratorInterface $chromosomeGenerator,
         CrossoverMethodInterface $crossoverMethod,
         MutateMethodInterface $mutateMethod,
         Config $config = null
     ) {
         $this->fitnessCalculator   = $fitnessCalculator;
-        $this->chromosomeGenerator = $chromosomeGenerator;
         $this->crossoverMethod     = $crossoverMethod;
         $this->mutateMethod        = $mutateMethod;
         $this->config              = $config ?: new Config();
@@ -75,16 +67,6 @@ class GeneticAlgorithm
     public function setConfig(Config $config)
     {
         $this->config = $config;
-    }
-
-    /**
-     * @param ChromosomeGeneratorInterface $chromosomeGenerator
-     * @return $this
-     */
-    public function setChromosomeGenerator(ChromosomeGeneratorInterface $chromosomeGenerator)
-    {
-        $this->chromosomeGenerator = $chromosomeGenerator;
-        return $this;
     }
 
     /**
@@ -118,12 +100,13 @@ class GeneticAlgorithm
     }
 
     /**
+     * @param ChromosomeGeneratorInterface $chromosomeGenerator
      * @return $this
      */
-    public function initPopulation()
+    public function initPopulation(ChromosomeGeneratorInterface $chromosomeGenerator)
     {
         $populationCount = $this->config->get(Config::POPULATION_COUNT);
-        $chromosomes     = $this->chromosomeGenerator->generateChromosomes($populationCount);
+        $chromosomes     = $chromosomeGenerator->generateChromosomes($populationCount);
 
         foreach ($chromosomes as $chromosome) {
             foreach ($chromosome->getValue() as $gene) {
